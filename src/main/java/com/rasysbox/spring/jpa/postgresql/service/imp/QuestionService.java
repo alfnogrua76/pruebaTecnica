@@ -2,6 +2,7 @@ package com.rasysbox.spring.jpa.postgresql.service.imp;
 
 import com.rasysbox.spring.jpa.postgresql.converter.QuestionConverter;
 import com.rasysbox.spring.jpa.postgresql.dto.QuestionDTO;
+import com.rasysbox.spring.jpa.postgresql.dto.StudentDTO;
 import com.rasysbox.spring.jpa.postgresql.entity.Question;
 import com.rasysbox.spring.jpa.postgresql.entity.Student;
 import com.rasysbox.spring.jpa.postgresql.repository.QuestionRepository;
@@ -56,8 +57,22 @@ public class QuestionService implements IQuestionService{
         if(estudiante.getId() != null) {
             Question qst = fillQuestion(new Question(), questionDTO);
             qst = questionRepository.save(qst);
-            //Student student = this.studentService.findById(questionDTO.getId());
-            //student.setQuestion(questionDTO.getId());
+            Student student = this.studentService.findById(questionDTO.getId());
+            StudentDTO studentDTO = new StudentDTO();
+            studentDTO.setCity(estudiante.getCity());
+            studentDTO.setNames(estudiante.getNames());
+            studentDTO.setAge(estudiante.getAge());
+            studentDTO.setTime_zone(estudiante.getTime_zone());
+            studentDTO.setId(estudiante.getId());
+
+            Question ques = new Question();
+            ques.setId(questionDTO.getId());
+            ques.setQuestion1(questionDTO.getQuestion1());
+            ques.setQuestion2(questionDTO.getQuestion2());
+            ques.setDate_test(questionDTO.getDate_test());
+            ques.setNote(questionDTO.getNote());
+            studentDTO.setQuestion(ques);
+            this.studentService.update(studentDTO);
             return qst.getId();
         }
         log.error("No se pudo crear");
